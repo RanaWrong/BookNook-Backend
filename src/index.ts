@@ -5,7 +5,6 @@ import { connectToDatabase } from "./config/db";
 import bookRoutes from "./routes/bookRoutes";
 import borrowRoutes from "./routes/borrowRoutes";
 import authRoutes from "./routes/authRoutes";
-import aiRoutes from "./routes/aiRoutes";
 
 dotenv.config();
 
@@ -35,7 +34,6 @@ app.get("/", (_req: Request, res: Response) => {
       books: "/books",
       borrows: "/borrows",
       auth: "/auth/token",
-      ai: "/ai/status",
     },
   });
 });
@@ -44,7 +42,6 @@ app.get("/", (_req: Request, res: Response) => {
 app.use("/books", bookRoutes);
 app.use("/borrows", borrowRoutes);
 app.use("/auth", authRoutes);
-app.use("/ai", aiRoutes);
 
 // 404 Route Handler
 app.use((_req: Request, res: Response) => {
@@ -73,4 +70,3 @@ async function startServer() {
 startServer();
 
 export default app;
-
