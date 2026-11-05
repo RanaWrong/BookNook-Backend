@@ -22,9 +22,10 @@ router.get("/", async (req, res: Response) => {
     }
 
     if (search && typeof search === "string" && search.trim() !== "") {
+      const sanitizedSearch = search.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
       query.$or = [
-        { title: { $regex: search.trim(), $options: "i" } },
-        { author: { $regex: search.trim(), $options: "i" } },
+        { title: { $regex: sanitizedSearch, $options: "i" } },
+        { author: { $regex: sanitizedSearch, $options: "i" } },
       ];
     }
 
