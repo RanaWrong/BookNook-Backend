@@ -49,3 +49,4 @@ router.post("/embed", async (req: Request, res: Response) => {
 });
 
 export default router;
+

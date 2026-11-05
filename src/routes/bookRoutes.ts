@@ -267,3 +267,4 @@ router.delete("/:id", verifyToken, async (req: AuthenticatedRequest, res: Respon
 });
 
 export default router;
+

@@ -80,3 +80,4 @@ export async function testAiConnection(): Promise<{ success: boolean; model: str
     };
   }
 }
+
