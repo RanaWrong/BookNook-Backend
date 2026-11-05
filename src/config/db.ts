@@ -1,7 +1,14 @@
 import { MongoClient, Db, Collection } from "mongodb";
 import dotenv from "dotenv";
+import dns from "node:dns";
 
 dotenv.config();
+
+try {
+  dns.setServers(["8.8.8.8", "1.1.1.1"]);
+} catch {
+  // Ignore in environments where setServers is restricted
+}
 
 const uri = process.env.MONGODB_URI || "mongodb://localhost:27017/booknook";
 const dbName = process.env.DB_NAME || "booknook";
@@ -67,3 +74,4 @@ export function getBooksCollection(): Collection<BookDocument> {
 export function getBorrowsCollection(): Collection<BorrowDocument> {
   return getDatabase().collection<BorrowDocument>("borrows");
 }
+
