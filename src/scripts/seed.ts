@@ -1,7 +1,12 @@
 import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
+import dns from "node:dns";
 
 dotenv.config();
+
+try {
+  dns.setServers(["8.8.8.8", "1.1.1.1"]);
+} catch {}
 
 const uri = process.env.MONGODB_URI || "mongodb://localhost:27017/booknook";
 const dbName = process.env.DB_NAME || "booknook";
@@ -115,3 +120,4 @@ async function seed() {
 }
 
 seed();
+
