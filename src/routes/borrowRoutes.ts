@@ -5,6 +5,9 @@ import { verifyToken, AuthenticatedRequest } from "../middleware/auth";
 
 const router = Router();
 
+// Apply verifyToken middleware to all borrow endpoints - Login required
+router.use(verifyToken);
+
 // POST /borrows - Borrow a book (Protected)
 // Implements Challenge 1 (Stock $inc: -1) & Challenge 2 (No Double Borrow)
 router.post("/", verifyToken, async (req: AuthenticatedRequest, res: Response) => {

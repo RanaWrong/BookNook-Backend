@@ -65,8 +65,8 @@ router.get("/", async (req, res: Response) => {
   }
 });
 
-// GET /books/:id - Retrieve single book by ID
-router.get("/:id", async (req, res: Response) => {
+// GET /books/:id - Retrieve single book by ID (Protected with verifyToken - Private Route)
+router.get("/:id", verifyToken, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const { id } = req.params;
 
