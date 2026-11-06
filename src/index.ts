@@ -14,15 +14,22 @@ const port = process.env.PORT || 5000;
 // Middleware
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000",
-      "http://localhost:3001",
-      process.env.CLIENT_URL || "",
-    ].filter(Boolean),
+    origin: true,
     credentials: true,
   })
 );
 app.use(express.json());
+
+// Ensure MongoDB connection is initialized before handling routes (works for both local and serverless)
+app.use(async (_req: Request, _res: Response, next) => {
+  try {
+    await connectToDatabase();
+    next();
+  } catch (error) {
+    console.error("[Database Middleware] Connection error:", error);
+    next();
+  }
+});
 
 // Root endpoint / Health check
 app.get("/", (_req: Request, res: Response) => {
