@@ -10,8 +10,20 @@ try {
   // Ignore in environments where setServers is restricted
 }
 
-const uri = process.env.MONGODB_URI || "mongodb://localhost:27017/booknook";
-const dbName = process.env.DB_NAME || "booknook";
+function getSanitizedMongoUri(): string {
+  let raw = process.env.MONGODB_URI || "";
+  // Strip surrounding quotes (" or ') and leading/trailing whitespace
+  raw = raw.trim().replace(/^["']|["']$/g, "").trim();
+
+  // If user pasted without scheme prefix but provided host/cluster address
+  if (raw && !raw.startsWith("mongodb://") && !raw.startsWith("mongodb+srv://")) {
+    if (raw.includes(".mongodb.net") || raw.includes("@")) {
+      raw = `mongodb+srv://${raw}`;
+    }
+  }
+
+  return raw || "mongodb://localhost:27017/booknook";
+}
 
 let client: MongoClient | null = null;
 let db: Db | null = null;
@@ -47,6 +59,9 @@ export interface BorrowDocument {
 
 export async function connectToDatabase(): Promise<Db> {
   if (db) return db;
+
+  const uri = getSanitizedMongoUri();
+  const dbName = process.env.DB_NAME || "booknook";
 
   try {
     client = new MongoClient(uri);
