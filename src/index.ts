@@ -2,23 +2,35 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { connectToDatabase } from "./config/db";
+import { getAllowedOrigins, getJwtSecret } from "./config/env";
 import bookRoutes from "./routes/bookRoutes";
 import borrowRoutes from "./routes/borrowRoutes";
 import authRoutes from "./routes/authRoutes";
 
 dotenv.config();
 
+// Fail fast: never run with a missing or guessable signing secret.
+getJwtSecret();
+
 const app = express();
 const port = process.env.PORT || 5000;
 
+app.disable("x-powered-by");
+
 // Middleware
+// Browser access is limited to the configured frontend origins. Requests with
+// no Origin header (curl, server-to-server) are not subject to CORS. The API
+// authenticates with a Bearer header, so cookies/credentials are not enabled.
 app.use(
   cors({
-    origin: true,
-    credentials: true,
+    origin(origin, callback) {
+      callback(null, !origin || getAllowedOrigins().includes(origin));
+    },
+    methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-app.use(express.json());
+app.use(express.json({ limit: "100kb" }));
 
 // Ensure MongoDB connection is initialized before handling routes (works for both local and serverless)
 app.use(async (_req: Request, _res: Response, next) => {

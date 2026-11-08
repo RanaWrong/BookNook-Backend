@@ -35,7 +35,7 @@ BookNook Backend is a high-performance RESTful API service built with **Express.
 | `POST` | `/borrows` | **JWT** | Borrow a book (atomically decrements copy, checks double borrow) |
 | `GET` | `/borrows` | **JWT** | Get all active borrows for authenticated user |
 | `DELETE` | `/borrows/:id` | **JWT** | Return borrowed book (atomically increments copy) |
-| `POST` | `/auth/token` | Public | Issue signed JWT token for authenticated session |
+| `POST` | `/auth/token` | **Login session** | Exchange the frontend's BetterAuth `sessionToken` for an API JWT. Identity is read from the database, never from the request body |
 
 ---
 
@@ -47,9 +47,14 @@ Create a `.env` file in the root directory:
 PORT=5000
 MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/booknook?retryWrites=true&w=majority
 DB_NAME=booknook
-JWT_SECRET=REMOVED_SECRET
-CLIENT_URL=http://localhost:3000
+JWT_SECRET=<random 32+ characters>
+CORS_ORIGINS=http://localhost:3000
 ```
+
+- `JWT_SECRET` is **required**. There is no default: the server refuses to start if it is missing, short or a known placeholder. Generate one with `node -e "console.log(require('crypto').randomBytes(48).toString('base64'))"`.
+- `CORS_ORIGINS` is a comma-separated list of frontend origins. In production no browser origin is allowed until this is set.
+- `MONGODB_URI` / `DB_NAME` must point to the **same database as the frontend**, because `/auth/token` verifies the frontend's BetterAuth session against its `session` and `user` collections.
+- Run `npm test` for the auth tests.
 
 ---
 

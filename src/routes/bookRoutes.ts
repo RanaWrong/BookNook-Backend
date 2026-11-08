@@ -60,7 +60,6 @@ router.get("/", async (req, res: Response) => {
     return res.status(500).json({
       success: false,
       message: "Failed to retrieve books from database.",
-      error: error.message,
     });
   }
 });
@@ -96,7 +95,6 @@ router.get("/:id", verifyToken, async (req: AuthenticatedRequest, res: Response)
     return res.status(500).json({
       success: false,
       message: "Failed to retrieve book.",
-      error: error.message,
     });
   }
 });
@@ -143,7 +141,6 @@ router.post("/", verifyToken, async (req: AuthenticatedRequest, res: Response) =
     return res.status(500).json({
       success: false,
       message: "Failed to add book.",
-      error: error.message,
     });
   }
 });
@@ -215,7 +212,6 @@ router.patch("/:id", verifyToken, async (req: AuthenticatedRequest, res: Respons
     return res.status(500).json({
       success: false,
       message: "Failed to update book.",
-      error: error.message,
     });
   }
 });
@@ -262,7 +258,6 @@ router.delete("/:id", verifyToken, async (req: AuthenticatedRequest, res: Respon
     return res.status(500).json({
       success: false,
       message: "Failed to delete book.",
-      error: error.message,
     });
   }
 });

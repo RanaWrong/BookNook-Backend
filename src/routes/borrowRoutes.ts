@@ -105,7 +105,6 @@ router.post("/", verifyToken, async (req: AuthenticatedRequest, res: Response) =
     return res.status(500).json({
       success: false,
       message: "Failed to borrow book.",
-      error: error.message,
     });
   }
 });
@@ -131,7 +130,6 @@ router.get("/", verifyToken, async (req: AuthenticatedRequest, res: Response) =>
     return res.status(500).json({
       success: false,
       message: "Failed to retrieve your borrowed books.",
-      error: error.message,
     });
   }
 });
@@ -193,7 +191,6 @@ router.delete("/:id", verifyToken, async (req: AuthenticatedRequest, res: Respon
     return res.status(500).json({
       success: false,
       message: "Failed to return book.",
-      error: error.message,
     });
   }
 });

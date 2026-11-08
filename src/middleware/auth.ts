@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
+import { getJwtSecret } from "../config/env";
 
 export interface AuthenticatedUser {
   id?: string;
@@ -26,10 +27,9 @@ export const verifyToken = (
   }
 
   const token = authHeader.split(" ")[1];
-  const jwtSecret = process.env.JWT_SECRET || "REMOVED_SECRET";
 
   try {
-    const decoded = jwt.verify(token, jwtSecret) as AuthenticatedUser;
+    const decoded = jwt.verify(token, getJwtSecret(), { algorithms: ["HS256"] }) as AuthenticatedUser;
     if (!decoded || !decoded.email) {
       return res.status(401).json({
         success: false,
